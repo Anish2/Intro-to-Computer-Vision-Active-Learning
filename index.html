@@ -1,108 +1,229 @@
 <!DOCTYPE html>
-<html lang="en"><head>  
+<html lang="en">
+
+<head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <title>Computer Vision Class Project
-  | Georgia Tech | Fall 2018: CS 4476</title>
+    | Georgia Tech | Fall 2018: CS 4476</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
 
-<!-- Le styles -->  
+  <!-- Le styles -->
   <link href="css/bootstrap.css" rel="stylesheet">
-<style>
-body {
-padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-}
-.vis {
-color: #3366CC;
-}
-.data {
-color: #FF9900;
-}
-</style>
-  
-<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 60px;
+      /* 60px to make the container go all the way to the bottom of the topbar */
+    }
 
-<!-- HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
+    .vis {
+      color: #3366CC;
+    }
+
+    .data {
+      color: #FF9900;
+    }
+  </style>
+
+  <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 </head>
 
 <body>
-<div class="container">
-<div class="page-header">
+  <div class="container">
+    <div class="page-header">
 
-<!-- Title and Name --> 
-<h1>Multi-Class Active Learning and Image Classification</h1> 
-<span style="font-size: 20px; line-height: 1.5em;"><strong>Alhad Daftardar, Anish Visaria, Jason Lee, Naren Dikkala, Timothy Gieseking</strong></span><br>
-<span style="font-size: 18px; line-height: 1.5em;">Fall 2018 CS 4476 Computer Vision: Class Project</span><br>
-<span style="font-size: 18px; line-height: 1.5em;">Georgia Tech</span>
-<hr>
+      <!-- Title and Name -->
+      <h1>Multi-Class Active Learning and Image Classification</h1>
+      <span style="font-size: 20px; line-height: 1.5em;"><strong>Alhad Daftardar, Anish Visaria, Jason Lee, Naren
+          Dikkala, Timothy Gieseking</strong></span><br>
+      <span style="font-size: 18px; line-height: 1.5em;">Fall 2018 CS 4476 Computer Vision: Class Project</span><br>
+      <span style="font-size: 18px; line-height: 1.5em;">Georgia Tech</span>
+      <hr>
 
-<!-- Goal -->
-<h3>Problem Statement</h3>
+      <!-- Goal -->
+      <h3>Abstract</h3>
 
-<h4>Background</h4>
-Machine learning methods have been very successful for image classification, achieving high accuracy rates. However, machine learning methods typically require large numbers of labeled images, which can be time-consuming and expensive to obtain. Unlabeled images on the other hand, can often be collected automatically for a low cost.
+      Machine learning methods for image classification require large number of manually labeled images. For
+      traditional supervised learning methods, obtaining the necessary number of labeled images can be prohibitively
+      expensive. We implemented the uncertainty sampling with diversity maximization (USDM) active learning algorithm,
+      which is intended to decrease the number of necessary number of labeled images by utilizing many unlabeled
+      images. We also test the performance of USDM on image classification problems using an SVM and SIFT bag-of-words
+      representation. Our results show that USDM yields better classification performance than either the k-center or
+      margin active learning algorithms.
 
-Active learning is a category of techniques to increase the accuracy of supervised learning algorithms without increasing the number of labeled examples by utilizing a large number of unlabeled examples. In active learning, the learning algorithm is given a small set set of labeled data and a large set of unlabeled data called the active pool. The active learning algorithm selects a subset of the active pool to be labeled, intended to be the most informative examples. Finally, the supervised learning algorithm is trained on the labeled seed set and selected subset of the active pool.
-<br><br>
-<!-- figure -->
-<h4>Project Goals</h4>
-We plan to implement the Uncertainty Sampling with Diversity Maximization (USDM) active learning algorithm proposed by Yang et al. [2]. USDM is an active learning algorithm intended for multi-class image concept recognition. The first goal of the project is to implement the USDM algorithm. This implementation is novel, as there is no publicly available USDM code. The USDM algorithm takes as input a seed set of labeled images and set of unlabeled images as the active pool and outputs a subset of the active pool which it deems most informative.
+      <br><br>
+      <!-- Main Illustrative Figure -->
+      <div style="text-align: center;">
+        <img style="width: 65%;" alt="" src="teaser1.png">
+      </div>
+      <div style="text-align: center;">
+        <img style="width: 65%;" alt="" src="teaser2.png">
+      </div>
 
-The second goal of the project is to analyze the performance of the USDM algorithm for image classification. Various combinations of active learning algorithms and classification algorithms will be tested on image recognition data sets. The results will be compared and analyzed for insights about algorithm performance.
+      <br><br>
 
-<br><br>
-<!-- Main Illustrative Figure --> 
-<div style="text-align: center;">
-<img style="width: 100%;" alt="" src="diagram.svg">
-</div>
+      <h3>Introduction</h3>
+      Machine learning methods have been very successful for image classification, achieving high accuracy rates.
+      However, machine learning methods typically require large numbers of labeled images, which can be time-consuming
+      and expensive to obtain. On the other hand, it is possible to automatically obtain unlabeled images at a low
+      cost.
 
-<br><br>
-<!-- Approach -->
-<h3>Experimental Setup</h3>
-We will test the USDM algorithm against the k-center greedy and margin active learning algorithms. Additionally, as baseline comparisons, we will compare against results using only the seed set, the whole active pool, and the seed set together with a uniformly random selection from the active pool as the test set. The classification algorithms used will be k-nearest neighbors (KNN), support vector machine (SVM) with radial basis function kernel, logistic regression with radial basis function kernel, and a convolutional neural network. The data sets used will be Caltech 101 [4], COIL 100 [1], and Tiny ImageNet [2].
+      Active learning is a category of semi-supervised learning algorithms used to reduce the necessary number of
+      labeled images for machine learning. In active learning, the learning algorithm is given a small set set of
+      labeled data and a large set of unlabeled data called the active pool. The active learning algorithm selects a
+      subset of the active pool to be labeled, intended to be the most informative examples. Finally, a classifier is
+      trained on the labeled seed set and selected subset of the active pool.
 
-For each of the data sets above, we first perform the following operations on each selected data set. Take a 20% stratified sample of the data set as the test set, and use the remaining 80% of the data set as the training candidate set. From the training candidate set, create the seed set by selecting three examples from each class, and use the remaining examples in the training candidate set as the active pool.
+      The Uncertainty Sampling with Diversity Maximization (USDM) algorithm is an active learning technique proposed by
+      Yang et al. [6]. USDM is intended to address problems that can occur with other active learning algorithms when
+      there are many classes and a small seed set. The USDM algorithm selects a training set that has maximum
+      uncertainty while maintaining high diversity. The diversity maximization criterion addresses the issues of a
+      clustered training set that can occur with uncertainty sampling. The USDM algorithm is specifically intended for
+      classification problems with large numbers of classes.
 
-For each combination of training set selection algorithm, classification algorithm, and data set above, we will perform an experiment of the following form. Given the labeled seed set and the unlabeled active pool, the training set selection algorithm selects a subset of the active pool. The training set is then created as the union of the seed set and the selected subset of the active pool. The image classification algorithm is trained on the labeled training set. Finally, the trained classification model is tested on the test set and the test accuracy is calculated.
+      The first goal of the project was to implement the USDM algorithm in Python. This implementation is novel, as
+      there is no publicly available USDM code. Additionally, we test the effectiveness of USDM in the case of image
+      classification using a support vector machine with a SIFT bag-of-words representation.
 
-By comparing the test accuracy varying the active learning algorithm but using the same algorithm, we will compare the performance of USDM with other active learning algorithms. Additionally, by comparing the test accuracy between different classifiers using USDM, we will analyze the effectiveness of USDM on these classifiers. We will additionally qualitatively analyze the results for insights about the performance of USDM.
+      <br><br>
 
+      <h3>Approach</h3>
+      We assume that we are given a seed set of unlabeled images and an active pool of unlabeled images. First, the
+      SIFT features are computed for the images in the seed set and active pool using the OpenCV [4]. Then, 100 random
+      SIFT features are chosen from each classes and clustered into 2000 clusters using the k-means algorithm. The
+      number of features and clusters were selected empirically; however, since these hyperparameters are the same for
+      each active learning algorithm, we do not expect the values to strongly affect relative performance. Then, SIFT
+      is applied to each of the images in the seed set and active pool and we calculate the histogram of SIFT features
+      in each of the clusters, which is called the bag-of-words representation of the image.
 
-<br><br>
-<!-- Results -->
-<h3>Technical Approach</h3>
-This project will be written in Python with an API in accordance with the Google active learning repository. We will implement the USDM algorithm in Python according to the description by Yang, et al. [5]. For the other active learning algorithms, we will utilize the implementation in the Google active learning repository [3]. We will use the scikit-learn implementations of the k-nearest neighbors, support vector machine, and kernel logistic regression classifiers. We will use Tensorflow to implement the convolution neural network classifier. For each of these classifiers, we will write Python scripts for automated parameter selection.
+      Then, the USDM algorithm is applied to the bag-of-words representation of the seed set and the active pool. USDM
+      selects a subset of the active pool of images that balances attaining maximum classification uncertainty and
+      maximum diversity of the subset. The USDM hyperparameters were set in accordance with the recommendations by Y.
+      Yang et al. [6]. The selected subset of the active pool is labeled and appended with the seed set to form the
+      training set.
 
-<br><br>
-
-<!-- Results -->
-<h3>Works Cited</h3>
-[1] "Columbia Object Image Library (COIL-100),"
-S. A. Nene, S. K. Nayar and H. Murase,
-Technical Report CUCS-006-96, February 1996.
-    <br>
-[2] Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and
-Fei-Fei, L. (2009). ImageNet: a large-scale hierarchical
-image database. In CVPR    
-<br>
-[3] Google, “Active Learning Playground,” Github, 2014. https://github.com/google/active-learning
-<br>
-[4] L. Fei-Fei, R. Fergus and P. Perona. One-Shot learning of object
-categories. IEEE Trans. Pattern Recognition and Machine Intelligence. In
-press.
-<br>
-[5] Y. Yang, Z. Ma, F. Nie, X. Chang, and A. G. Hauptmann, “Multi-Class Active Learning by Uncertainty Sampling with Diversity Maximization,” International Journal of Computer Vision, vol. 113, no. 2, pp. 113–127, 2014.
-    
-    <br><br>
+      A SVM with radial basis function (RBF) kernel is used for image classification using the scikit-learn package. An
+      SVM with RBF kernel has been shown by Gao et al. [7] to achieve high performance for image classification with
+      using a SIFT representation. Hyperparameter selection is performed using grid search for C = [0.01, 0.1, 1, 10,
+      100] and gamma = [0.0001, 0.001, 0.01, 0.1, 1] with 5-fold cross-validation. The SVM is trained on the training
+      set and corresponding labels. To classify new images, the SIFT bag-of-words representation of the image is
+      calculated. The trained SVM classifies this bag-of-word representation with the most probable image label.
 
 
-</div>
-</div>
 
-<br><br>
 
-</body></html>
+      <br><br>
+
+      <h3>Experiments</h3>
+      The USDM algorithm was compared to the k-center greedy and margin active learning algorithms. Additionally, as
+      baseline comparisons, training using only the seed set, the whole active pool, and the seed set together with a
+      uniformly random selection from the active pool as the test set were evaluated. Experiments were run on the
+      Caltech 101 [5] and COIL 100 [1] image classification data sets.
+
+      For each of the data sets above, a 20% stratified sample of the data set was taken as the test set, and the
+      remaining 80% of the data set as the training candidate set. From the training candidate set, the seed set was
+      created by selecting three examples from each class, and the remaining examples in the training candidate set
+      were used as the active pool.
+
+      For each combination of training set selection algorithm and data set above, an experiment of the following form
+      was performed. Given the labeled seed set and the unlabeled active pool, the training set selection algorithm
+      selects a number of images from the active pool equal to ten times the number of classes. The training set is
+      then created as the union of the seed set and the selected subset of the active pool. A SVM is trained on the
+      labeled training set. Finally, the trained classification model is tested on the test set and scored using the F1
+      score with micro-averaging.
+
+      <br><br>
+
+      <h3>Results</h3>
+      <div style="text-align: center;">
+        <img style="width: 100%;" alt="" src="table1.png">
+      </div>
+
+      Table 1 shows the F1 classification score achieved for each of the data sets and training set selection method.
+      These results show that the k-center and margin active learning algorithms perform either only slightly better or
+      worse than random selection. This shows that that k-center and margin are not suitable active learning algorithms
+      for this application.
+
+      In contrast, the classification score using USDM is much higher than when using random selection, k-center, or
+      margin for both data sets. This indicates that USDM is the best of the tested active learning algorithms for this
+      application. However, USDM performs significantly lower than the theoretical maximum performance achieved by
+      using the whole seed and active set, so increased accuracy might be achieved by alternate approaches.
+
+
+      <h3>Qualitative Results</h3>
+      <div style="text-align: center;">
+        <img style="width: 60%;" alt="" src="figure1.png">
+      </div>
+      <br><br>
+      <div style="text-align: center;">
+        <img style="width: 60%;" alt="" src="figure2.png">
+      </div>
+      <br>
+      Figures 1 and 2 show the results of selecting one hundred images from the active pool on the COIL data set using
+      the margin and USDM algorithm. One difference between the two selections is the distribution of item classes. The
+      margin active learning algorithm select many object from some classes, for example five images of the orange car.
+      In contrast, USDM does not select items from the same class as often due to the diversity maximization criterion.
+      Based on the previous quantitative results, it is clear that this difference causes USDM to have superior
+      performance.
+
+      <br><br>
+      <h3>Conclusion and Future Work</h3>
+      USDM shows significant improvement compared to other active learning algorithms in a multi class image
+      classification task. USDM’s two main advantages are its ability to learn with a small seed set and its
+      flexibility in classifying multi class sets as opposed to binary classification. USDM combines diversity
+      maximization with uncertainty sampling in order to avoid clustering in the active pool, which is a common pitfall
+      in other active learning algorithms. The chosen samples are also evaluated on their informativeness across
+      multiple classes, offering better performance in the multi-class context. We cannot conclusively state if it is a
+      superior method overall because the scope of the testing did not cover all known active learning algorithms. The
+      results we have described above are encouraging that USDM is a valid method of performing semi-supervised
+      learning and can be applied to a variety of problems in the computer vision space.
+
+      Future work in this space includes testing the USDM on more and larger data sets, such as TinyImageNet, Amsterdam
+      Library of Object Images, and the CMU PIE face database. These datasets would let us draw more conclusions as to
+      the accuracy and applicability of USDM in different situations. In addition, we could test the USDM algorithm
+      against other active learning methods such as representative cluster mean sampling or graph density sampling that
+      we were unable to test due to our limited computation power.
+
+      <br><br>
+
+
+
+
+      <!-- Results -->
+      <h3>Works Cited</h3>
+      [1] "Columbia Object Image Library (COIL-100)," S. A. Nene, S. K. Nayar and H. Murase, Technical Report
+      CUCS-006-96, February 1996.
+      <br>
+      [2] Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L. (2009). ImageNet: a large-scale
+      hierarchical image database. In CVPR
+      <br>
+      [3] Google, “Active Learning Playground,” Github, 2014. https://github.com/google/active-learning
+      <br>
+      [4] “Introduction to SIFT (Scale-Invariant Feature Transform),” OpenCV. [Online]. Available:
+      https://docs.opencv.org/3.4/da/df5/tutorial_py_sift_intro.html. [Accessed: 31-Oct-2018].
+      <br>
+      [5] L. Fei-Fei, R. Fergus and P. Perona. One-Shot learning of object categories. IEEE Trans. Pattern Recognition
+      and Machine Intelligence. In press.
+      <br>
+      [6] Y. Yang, Z. Ma, F. Nie, X. Chang, and A. G. Hauptmann, “Multi-Class Active Learning by Uncertainty Sampling
+      with Diversity Maximization,” International Journal of Computer Vision, vol. 113, no. 2, pp. 113–127, 2014.
+      <br>
+      [7] H. Gao, L. Dou, W. Chen, and J. Sun, “Image classification with Bag-of-Words model based on improved SIFT
+      algorithm,” 2013 9th Asian Control Conference (ASCC), 2013.
+
+
+    </div>
+  </div>
+
+  <br><br>
+
+</body>
+
+</html>
